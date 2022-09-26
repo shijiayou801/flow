@@ -66,7 +66,8 @@ target_link_libraries(test_it
   ${spdk_libs}
   ${dpdk_libs}
   ${std_libs})
+target_link_options(test_it PUBLIC "LINKER:-no-as-needed")
 
 enable_testing()
 add_test(NAME ApBankTest COMMAND test_it)
-  
+
