@@ -1,4 +1,4 @@
-project(ApBank)
+project(Flow)
 cmake_minimum_required(VERSION 3.6.13)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -50,8 +50,8 @@ set(dpdk_libs
   "${LINK_FLAGS_END}")
 
 
-set(DPDK_BUILD_PATH /home/jyshi/Jiayou/apbank/third-party/spdk/dpdk/build)
-set(SPDK_BUILD_PATH /home/jyshi/Jiayou/apbank/third-party/spdk/build)
+set(DPDK_BUILD_PATH /home/jyshi/Jiayou/flow/third-party/spdk/dpdk/build)
+set(SPDK_BUILD_PATH /home/jyshi/Jiayou/flow/third-party/spdk/build)
 
 
 include_directories(${DPDK_BUILD_PATH}/include)
@@ -66,8 +66,9 @@ target_link_libraries(test_it
   ${spdk_libs}
   ${dpdk_libs}
   ${std_libs})
-target_link_options(test_it PUBLIC "LINKER:-no-as-needed")
+target_link_options(test_it PUBLIC 
+  "LINKER:-no-as-needed,-copy-dt-needed-entries")
 
 enable_testing()
-add_test(NAME ApBankTest COMMAND test_it)
+add_test(NAME FlowTest COMMAND test_it)
 
