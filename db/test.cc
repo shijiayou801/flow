@@ -1,44 +1,59 @@
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 #include <spdk/stdinc.h>
 #include <spdk/string.h>
 #include <spdk/event.h>
 #include <spdk/thread.h>
 #include <spdk/log.h>
-#include <spdk/bdev_zone.h>
 #include <spdk/env.h>
+#include <spdk/nvme.h>
 
-struct hello_context_t {
-  struct spdk_bdev *bdev;
-  struct spdk_bdev_desc *bdev_desc;
-  struct spdk_io_channel *bdev_io_channel;
-  char *buff;
-  char *bdev_name;
-  struct spdk_bdev_io_wait_entry bdev_io_wait;
-};
+static struct spdk_nvme_transport_id g_trid = {};
 
-static void hello_start(void *arg1) {
-  struct hello_context_t *ctx = (struct hello_context_t *)arg1;
 
-  SPDK_NOTICELOG("Successfully started the application\n");
+static bool probe_cb(void *cb_ctx, const struct spdk_nvme_transport_id *trid,
+    struct spdk_nvme_ctrlr_opts *opts) {
+  SPDK_NOTICELOG("Attaching to %s\n", trid->traddr);
+  return true;
+}
+
+static void attach_cb(void *cb_ctx, const struct spdk_nvme_transport_id *trid,
+    struct spdk_nvme_ctrlr *ctrlr, const struct spdk_nvme_ctrlr_opts *opts) {
 
 }
 
-int main() {
-  struct spdk_app_opts opts = {};
-  struct hello_context_t hello_context = {};
+int client() {
   int rc = 0;
+  struct spdk_env_opts opts;
 
-  spdk_app_opts_init(&opts, sizeof(opts));
-  opts.name = "hello_bdev";
-
-  //rc = spdk_app_parse_args(argc, argv, &opts, "b:", nullptr,
-  //                         hello_bdev_parse_arg, hello_bdev_usage);
-  
-  rc = spdk_app_start(&opts, hello_start, &hello_context);
-  if (rc) {
-    SPDK_ERRLOG("ERROR starting application\n");
+  spdk_env_opts_init(&opts);
+  opts.name = "flow";
+  if (spdk_env_init(&opts) < 0) {
+    SPDK_ERRLOG("failed to init env\n");
+    return 1;
   }
 
+  SPDK_NOTICELOG("initializing NVMe Controllers\n");
+  rc = spdk_nvme_probe(&g_trid, nullptr, probe_cb, attach_cb, nullptr);
+  if (rc != 0) {
+    SPDK_ERRLOG("spdk_nvme_probe() failed\n");
+    rc = 1;
+    goto exit;
+  }
+
+
+exit:
+  spdk_env_fini();
+  return 1;
+}
+
+int server() {
+  
   return 0;
+}
+
+int main() {
+  return server();
 }
