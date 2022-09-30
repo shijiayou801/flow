@@ -60,15 +60,15 @@ link_directories(${DPDK_BUILD_PATH}/lib)
 include_directories(${SPDK_BUILD_PATH}/include)
 link_directories(${SPDK_BUILD_PATH}/lib)
 
-add_executable(test_it
-  db/test.cc)
-target_link_libraries(test_it
+add_executable(hello_nvme
+  db/hello_nvme.cc)
+target_link_libraries(hello_nvme
   ${spdk_libs}
   ${dpdk_libs}
   ${std_libs})
-target_link_options(test_it PUBLIC 
+target_link_options(hello_nvme PUBLIC 
   "LINKER:-no-as-needed,-copy-dt-needed-entries")
 
 enable_testing()
-add_test(NAME FlowTest COMMAND test_it)
+add_test(NAME FlowTest COMMAND hello_nvme)
 

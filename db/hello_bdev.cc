@@ -44,6 +44,7 @@ static void hello_start(void *arg1) {
     return;
   }
 
+
 }
 
 int main() {
@@ -56,7 +57,6 @@ int main() {
   hello_context.bdev_name = g_bdev_name;
  
   SPDK_NOTICELOG("starting...\n");
-
 
   rc = spdk_app_start(&opts, hello_start, &hello_context);
   if (rc) {
