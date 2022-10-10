@@ -1,3 +1,9 @@
 set -ex
 
-./third-party/spdk/configure --with-rdma --with-shared --without-isal --disable-unit-tests --disable-tests
+cd third-party/spdk
+
+git submodule update --init
+
+./configure --with-rdma --with-shared --without-isal --disable-unit-tests --disable-tests
+
+cd ../..

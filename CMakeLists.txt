@@ -50,8 +50,8 @@ set(dpdk_libs
   "${LINK_FLAGS_END}")
 
 
-set(DPDK_BUILD_PATH /home/jyshi/Jiayou/flow/third-party/spdk/dpdk/build)
-set(SPDK_BUILD_PATH /home/jyshi/Jiayou/flow/third-party/spdk/build)
+set(DPDK_BUILD_PATH /home/jyshi/dev/flow/third-party/spdk/dpdk/build)
+set(SPDK_BUILD_PATH /home/jyshi/dev/flow/third-party/spdk/build)
 
 
 include_directories(${DPDK_BUILD_PATH}/include)
